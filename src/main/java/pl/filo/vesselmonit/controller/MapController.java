@@ -1,4 +1,4 @@
-package pl.filo.vesselmonit;
+package pl.filo.vesselmonit.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
