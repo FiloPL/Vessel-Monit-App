@@ -19,7 +19,7 @@ public class TrackService {
     public List<Point> getTracks() {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjBCM0I1NEUyRkQ5OUZCQkY5NzVERDMxNDBDREQ4OEI1QzA5RkFDRjMiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJDenRVNHYyWi03LVhYZE1VRE4ySXRjQ2ZyUE0ifQ.eyJuYmYiOjE2Mzc4Njk4MjMsImV4cCI6MTYzNzg3MzQyMywiaXNzIjoiaHR0cHM6Ly9pZC5iYXJlbnRzd2F0Y2gubm8iLCJhdWQiOiJhcGkiLCJjbGllbnRfaWQiOiJwcnplbWVrQGJ5a293c2tpLnBsOmxpdmVzdHJlYW0iLCJzY29wZSI6WyJhcGkiXX0.JWE-RR1D47MP99FKDsukushTQoR0hYoLdXrAue0_nIqdrKctwXeHBtD1EQBA0bAl4Y3d3PiGuNOwQwObp1t0JgXJ_PdAXcyYhzRzl36Z1RPSlJJH9PHGDlYrI6-yVvfgAK7v3JP9rLOQf_tCvogAQGXLe52PlVhajCCkJT7ekkUv2GzwkOX26cGEsId-465CP-itKc-lP1in2sOqY3QAoOdU9-HP1-Pq5z3qGpq0OWDbWbLp9bPtDBhdNjUlDAboLeGd1sb6fwsA72jkvt0M1W5iSx_TPKIpzL8pN-KyoR-h5jwSsjaw4yiRpTuAf6DHOD4bLQefkOI-NmWDkbgnCmnOQ2QZaXG6lrSWxwOkydZw__4hIBvD10jK_dKKfOQg7E5JakhQEZONm46Tog_onNc6yYC-OdOjtBjTIB4AFCMU3SWhOvB285VSkoIDKRdsH_ZzRCIHavYXCR7uTvQQmqYbnErSeps2dFgVhwr-4E8WW-xaTW2CBP-acDMza6GgsaWxIWRnCNAnIt-3bDTZbftfFUyHsyBuzvy7gtLgths5nC50Bh1WwjjqDr4o6D8Mc9buFR4Crv-_lMcGCYIkqT74EACWdsHDVe3VI5dT5-U0NwimRAIsu90B_1Yj9thTw5aY2eghaacRAWEwToyNzF1ucJdKbCKSLmG7M0Ll5nQ");
+        httpHeaders.add("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjBCM0I1NEUyRkQ5OUZCQkY5NzVERDMxNDBDREQ4OEI1QzA5RkFDRjMiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJDenRVNHYyWi03LVhYZE1VRE4ySXRjQ2ZyUE0ifQ.eyJuYmYiOjE2NDM5Mjg1NTAsImV4cCI6MTY0MzkzMjE1MCwiaXNzIjoiaHR0cHM6Ly9pZC5iYXJlbnRzd2F0Y2gubm8iLCJhdWQiOiJhaXMiLCJjbGllbnRfaWQiOiJkb2dtYWpvYWNoaW1AZ21haWwuY29tOmRvZ21ham9hY2hpbUBnbWFpbC5jb20iLCJzY29wZSI6WyJhaXMiXX0.rrNItUT8dzmwN2gkvolpkikHsJBJZxnM2upsGjL_9Iz0pEVyFRVjwoUfIZeU3hfpDySOZbSEzuZSZVH8aZ_G5BGaqNL78Y12RyMw3gMiGbHw4eHE7MY15EBmvCozSEWlZcPsKg2g3vIi3TeaaCylbJ4Zt9X4EB6foV0cSYg3QNNa6D_fw6CCokpTJ11XWSX2bwC84OYaE_gxdM6y_V3x1Hp5BpEy4Nrrr4Q55boKoZo51u09Ki-u2utezo-vMGCsQFFQnv6k0yVOGgBzNH1Idy5LzW-qBpOlOX3NZfSB8RdcpJbajThGaMcHYjM2Jdi_l_CuGSnLTOcRdGbwP4vYZSdfqtZjQNqG_fxu7dDjT3pUysGazF052EO0s1SrJRDg34FlgTlBVApz1WYhgnqXRqoSBKPjv5WQuKwSZbWBATzfc3RU_SV-sypB34jW5EW0AwKIWEQtBa8fLicNz60l2pnvZdYtFFY_9gwioNHiU4GvdcoxOmBVgNgwUhK3l0t7YBlzNJOuOuZwrxNOeZMsX9_gqNhewAUFmGN-v2GV4tBgqbCCpVs1DxSHBI-IGWuJeLDdujGsdmxo4o7d5GVw2Wx43HjWUX7HPYXHbjxeFRYn58UX5pBbpzjtTycJNmQuZgY8WDYwULcRsAsKGjY5YXIWRcL3zjnEywqg64aiwuQ");
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
 
         ResponseEntity<Track[]> exchange = restTemplate.exchange("https://www.barentswatch.no/bwapi/v2/geodata/ais/openpositions?Xmin=10.09094&Xmax=10.67047&Ymin=63.3989&Ymax=63.58645",
@@ -41,7 +41,7 @@ public class TrackService {
 
     public Datum getDestination(String destinationName, List<Double> coordinates) {
         try {
-            String url = "http://api.positionstack.com/v1/forward?access_key=f9aae45e031a1e66eac64db90ffda427&query=" + destinationName;
+            String url = "http://api.positionstack.com/v1/forward?access_key=326a25862db8fb72c2c3ed000277efe6&query=" + destinationName;
             // sp[rytne obejście mapowania do medelu, tylko do JasonNode gdzie wyciąga sie to co potrzeba
             JsonNode data = restTemplate.getForObject(url, JsonNode.class).get("data").get(0);
             double latitude = data.get("latitude").asDouble();
