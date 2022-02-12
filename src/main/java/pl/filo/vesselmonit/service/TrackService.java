@@ -1,4 +1,4 @@
-package pl.filo.vesselmonit.model;
+package pl.filo.vesselmonit.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpEntity;
@@ -7,6 +7,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import pl.filo.vesselmonit.model.Datum;
+import pl.filo.vesselmonit.model.Point;
+import pl.filo.vesselmonit.model.Track;
 
 import java.util.List;
 import java.util.stream.Collectors;

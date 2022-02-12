@@ -3,7 +3,7 @@ package pl.filo.vesselmonit.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import pl.filo.vesselmonit.model.TrackService;
+import pl.filo.vesselmonit.service.TrackService;
 
 @Controller
 public class MapController {
