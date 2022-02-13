@@ -1,58 +1,150 @@
 package pl.filo.vesselmonit.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
-import pl.filo.vesselmonit.model.Datum;
-import pl.filo.vesselmonit.model.Point;
-import pl.filo.vesselmonit.model.Track;
 
+import pl.filo.vesselmonit.entity.Position;
+import pl.filo.vesselmonit.entity.Vessel;
+import pl.filo.vesselmonit.model.Point;
+import pl.filo.vesselmonit.model.TrackData;
+import pl.filo.vesselmonit.model.VesselModel;
+import pl.filo.vesselmonit.repository.PositionRepository;
+import pl.filo.vesselmonit.repository.VesselRepository;
+import pl.filo.vesselmonit.service.AISTokenService;
+import pl.filo.vesselmonit.service.VesselService;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+
 
 @Service
-public class TrackService {
-    RestTemplate restTemplate = new RestTemplate();
+public class TrackService
+{
+    private static final String VESSEL_LOCATIONS_URL = "https://www.barentswatch.no/bwapi/v2/geodata/ais/openpositions?" +
+            "Xmin=10.09094&Xmax=10.67047&Ymin=63.3989&Ymax=63.58645";
 
-    public List<Point> getTracks() {
+    private final RestTemplate restTemplate;
+    private final AISTokenService aisTokenService;
+    private final VesselRepository vesselRepository;
+    private final PositionRepository positionRepository;
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjBCM0I1NEUyRkQ5OUZCQkY5NzVERDMxNDBDREQ4OEI1QzA5RkFDRjMiLCJ0eXAiOiJhdCtqd3QiLCJ4NXQiOiJDenRVNHYyWi03LVhYZE1VRE4ySXRjQ2ZyUE0ifQ.eyJuYmYiOjE2NDM5Mjg1NTAsImV4cCI6MTY0MzkzMjE1MCwiaXNzIjoiaHR0cHM6Ly9pZC5iYXJlbnRzd2F0Y2gubm8iLCJhdWQiOiJhaXMiLCJjbGllbnRfaWQiOiJkb2dtYWpvYWNoaW1AZ21haWwuY29tOmRvZ21ham9hY2hpbUBnbWFpbC5jb20iLCJzY29wZSI6WyJhaXMiXX0.rrNItUT8dzmwN2gkvolpkikHsJBJZxnM2upsGjL_9Iz0pEVyFRVjwoUfIZeU3hfpDySOZbSEzuZSZVH8aZ_G5BGaqNL78Y12RyMw3gMiGbHw4eHE7MY15EBmvCozSEWlZcPsKg2g3vIi3TeaaCylbJ4Zt9X4EB6foV0cSYg3QNNa6D_fw6CCokpTJ11XWSX2bwC84OYaE_gxdM6y_V3x1Hp5BpEy4Nrrr4Q55boKoZo51u09Ki-u2utezo-vMGCsQFFQnv6k0yVOGgBzNH1Idy5LzW-qBpOlOX3NZfSB8RdcpJbajThGaMcHYjM2Jdi_l_CuGSnLTOcRdGbwP4vYZSdfqtZjQNqG_fxu7dDjT3pUysGazF052EO0s1SrJRDg34FlgTlBVApz1WYhgnqXRqoSBKPjv5WQuKwSZbWBATzfc3RU_SV-sypB34jW5EW0AwKIWEQtBa8fLicNz60l2pnvZdYtFFY_9gwioNHiU4GvdcoxOmBVgNgwUhK3l0t7YBlzNJOuOuZwrxNOeZMsX9_gqNhewAUFmGN-v2GV4tBgqbCCpVs1DxSHBI-IGWuJeLDdujGsdmxo4o7d5GVw2Wx43HjWUX7HPYXHbjxeFRYn58UX5pBbpzjtTycJNmQuZgY8WDYwULcRsAsKGjY5YXIWRcL3zjnEywqg64aiwuQ");
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
+    public TrackService(
+            final RestTemplateBuilder restTemplateBuilder,
+            final AISTokenService aisTokenService,
+            final VesselRepository vesselRepository,
+            final PositionRepository positionRepository)
+    {
+        this.restTemplate = restTemplateBuilder.build();
+        this.aisTokenService = aisTokenService;
+        this.vesselRepository = vesselRepository;
+        this.positionRepository = positionRepository;
+    }
 
-        ResponseEntity<Track[]> exchange = restTemplate.exchange("https://www.barentswatch.no/bwapi/v2/geodata/ais/openpositions?Xmin=10.09094&Xmax=10.67047&Ymin=63.3989&Ymax=63.58645",
+    public List<Point> getTracks()
+    {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Bearer " + aisTokenService.getAISToken());
+        final HttpEntity httpEntity = new HttpEntity(httpHeaders);
+
+        final ResponseEntity<TrackData[]> trackDataExchange = restTemplate.exchange(
+                VESSEL_LOCATIONS_URL,
                 HttpMethod.GET,
                 httpEntity,
-                Track[].class);
+                TrackData[].class);
+        final List<TrackData> trackData = Arrays.asList(trackDataExchange.getBody());
+        saveVessels(trackData);
+        savePositions(trackData);
+        return getPoints(trackData);
+    }
 
-        List<Point> collect = Stream.of(exchange.getBody()).map(
-                track -> new Point(
+    private void saveVessels(final List<TrackData> trackData)
+    {
+        final List<Integer> trackDataMmsi = trackData.stream()
+                .map(TrackData::getMmsi)
+                .collect(toList());
+        final List<Integer> savedMmsi = vesselRepository.findAllById(trackDataMmsi)
+                .stream()
+                .map(Vessel::getMmsi)
+                .collect(toList());
+        trackDataMmsi.removeAll(savedMmsi);
+        final List<Vessel> vessels = trackData.stream()
+                .filter(track -> trackDataMmsi.contains(track.getMmsi()))
+                .map(track -> new Vessel(
+                        track.getMmsi(),
+                        track.getName(),
+                        track.getImo(),
+                        track.getCallsign(),
+                        track.getCountry(),
+                        track.getShipType(),
+                        track.getA(),
+                        track.getB(),
+                        track.getC(),
+                        track.getD()))
+                .collect(toList());
+        vesselRepository.saveAll(vessels);
+    }
+
+    private void savePositions(final List<TrackData> trackData)
+    {
+        final List<Position> positions = trackData.stream()
+                .map(track -> new Position(
+                        null,
+                        parseToDate(track.getTimeStamp()),
                         track.getGeometry().getCoordinates().get(0),
                         track.getGeometry().getCoordinates().get(1),
-                        track.getName(),
-                        getDestination(track.getDestination(), track.getGeometry().getCoordinates()).getLongitude(),
-                        getDestination(track.getDestination(), track.getGeometry().getCoordinates()).getLatitude()
-                )
-        ).collect(Collectors.toList());
-        return collect;
+                        track.getCog(),
+                        track.getSog(),
+                        track.getRot(),
+                        track.getNavstat(),
+                        parseToDate(track.getEta()),
+                        track.getDestination(),
+                        track.getHeading(),
+                        track.getDraught(),
+                        track.getIsSurvey(),
+                        vesselRepository.getById(track.getMmsi())))
+                .collect(toList());
+        positionRepository.saveAll(positions);
     }
 
-    public Datum getDestination(String destinationName, List<Double> coordinates) {
-        try {
-            String url = "http://api.positionstack.com/v1/forward?access_key=326a25862db8fb72c2c3ed000277efe6&query=" + destinationName;
-            // sp[rytne obejście mapowania do medelu, tylko do JasonNode gdzie wyciąga sie to co potrzeba
-            JsonNode data = restTemplate.getForObject(url, JsonNode.class).get("data").get(0);
-            double latitude = data.get("latitude").asDouble();
-            double longitude = data.get("longitude").asDouble();
-            return new Datum(latitude, longitude);
-
-        } catch (Exception ex) {
-            return new Datum(coordinates.get(1), coordinates.get(0));
+    private LocalDateTime parseToDate(final String date)
+    {
+        if(date == null)
+        {
+            return null;
         }
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date.replace('T', ' ').replace('Z', ' ').trim(), formatter);
     }
+
+    private List<Point> getPoints(final List<TrackData> trackData)
+    {
+        return trackData.stream()
+                .map(track -> new Point(
+                        track.getGeometry().getCoordinates().get(1),
+                        track.getGeometry().getCoordinates().get(0),
+                        new VesselModel(
+                                track.getMmsi(),
+                                track.getName(),
+                                track.getImo(),
+                                track.getCallsign(),
+                                track.getCountry(),
+                                track.getShipType(),
+                                VesselService.SHIP_TYPE_MAP.getOrDefault(track.getShipType(), ""),
+                                track.getA(),
+                                track.getB(),
+                                track.getC(),
+                                track.getD())))
+                .collect(toList());
+    }
+
 }
