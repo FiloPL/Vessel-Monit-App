@@ -1,0 +1,69 @@
+.all-content-container {
+    height: calc(100vh - 170px);
+    min-height: 500px;
+    grid-area: content;
+    background-image: url(../images/backgrounds/contact-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.content-container{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-box .box{
+    background: #FFF;
+    border-radius: 10px;
+    padding: 40px 10px;
+    margin: 20px 0px;
+    cursor: pointer;
+    height: 300px;
+    transition: all 0.5s ease-out;
+}
+
+.social-box .box-title{
+    margin-top: 10px;
+}
+
+.social-box .box:hover{
+    box-shadow: inset 0 0 8px rgb(66, 128, 210), 0 0 8px rgb(66, 128, 210);
+}
+
+.social-box .box .box-text{
+    margin:20px 0px;
+    font-size: 15px;
+    line-height: 30px;
+}
+
+.social-box .box .box-btn a{
+    text-decoration: none;
+    color: rgba(66, 128, 210, 0.7);
+    font-weight: bold;
+    font-size: 16px;
+}
+.social-box .box .box-btn a:hover{
+    text-decoration: none;
+    color: rgba(66, 128, 210, 1);
+    font-size: 16px;
+}
+
+.centered-form .panel{
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+}
+.form-size{
+    width: 500px;
+    padding: 25px 30px 25px 30px;
+}
+.all-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}

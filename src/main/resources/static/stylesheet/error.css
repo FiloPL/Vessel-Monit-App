@@ -1,0 +1,36 @@
+body {
+    background-image: url(../images/backgrounds/error-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.page-wrap {
+    min-height: calc(100vh - 170px);
+}
+
+.back-home-btn{
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+    width: 344px;
+    height: 60px;
+    font-size: 32px;
+    margin-top: 10px;
+}
+
+.back-home-btn:hover{
+    color: #343a40;
+    border-color: #343a40;
+    background-color: transparent;
+}
+
+.error-circle{
+    font-size: 150px;
+    margin-bottom: 6px;
+}
+
+.error-info {
+    color: white;
+}

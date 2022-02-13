@@ -1,0 +1,85 @@
+.container {
+    height: 100%;
+    align-content: center;
+}
+
+.content-container {
+    height: calc(100vh - 170px);
+    min-height: 750px;
+    grid-area: content;
+    background-image: url(../images/backgrounds/register-background.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card {
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.card-header h3 {
+    color: white;
+}
+
+.input-group-prepend span {
+    width: 50px;
+    background-color: rgb(26, 117, 255);
+    color: black;
+    border: 0 !important;
+}
+
+.input-group {
+    width: 313px;
+}
+
+input:focus {
+    box-shadow: 0 0 0 0 !important;
+}
+
+.remember {
+    color: white;
+}
+
+.remember input {
+    width: 20px;
+    height: 20px;
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.register_btn {
+    color: black;
+    background-color: rgb(26, 117, 255);
+    width: 150px;
+}
+
+.register_btn:hover {
+    color: black;
+    background-color: white;
+}
+
+.links {
+    color: white;
+}
+
+.links a {
+    margin-left: 4px;
+}
+
+.card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(26, 117, 255, 0.8);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(26, 117, 255, 0.8);
+}
+
+.card-footer .links a:hover{
+    text-decoration: none;
+}

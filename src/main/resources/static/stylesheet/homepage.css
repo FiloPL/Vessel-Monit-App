@@ -1,0 +1,71 @@
+.carousel-item {
+    height: 65vh;
+    min-height: 350px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.fix-im {
+    position: relative;
+    bottom: 11rem;
+}
+
+@media screen and (max-width: 768px) {
+    .flex-100 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .fix-im {
+        bottom: 0;
+    }
+}
+
+
+.ugali {
+    background: black;
+    padding: 6px;
+}
+
+.grid-container {
+    display: grid;
+    min-width: 500px;
+    grid-template-columns: 100%;
+    grid-template-rows: 57px calc(100% - 230px) 173px;
+    grid-template-areas: "navbar"
+                        "content"
+                        "footer";
+}
+
+.content-container {
+    height: 100%;
+    grid-area: content;
+}
+
+.register-now-link {
+    color: rgb(90, 90, 90);
+    border: 0 solid black;
+    padding: 0 2px 2px 2px;
+    border-radius: 5px;
+}
+
+.register-now-link:hover {
+    text-decoration: none;
+    color: black;
+    background-color: rgba(46, 109, 193, 0.18);
+
+}
+
+.carousel-item-1{
+    background-image: url(../images/homepage/homepage-carousel-1.jpg);
+}
+.carousel-item-2{
+    background-image: url(../images/homepage/homepage-carousel-2.jpg);
+}
+.carousel-item-3{
+    background-image: url(../images/homepage/homepage-carousel-3.jpg);
+}

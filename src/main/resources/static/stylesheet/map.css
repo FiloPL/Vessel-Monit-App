@@ -1,0 +1,10 @@
+.all-content-container {
+    height: 100vh;
+    min-height: 800px;
+    grid-area: content;
+}
+
+#map {
+    margin-top: 57px;
+    height: 100%;
+}
